@@ -31,14 +31,14 @@ http://jingyan.baidu.com/article/76a7e409d2a25afc3b6e150d.html
 <pre><code>
 require "db.php";
 
-$sql = "select * from t_play_product order by product_id desc limit 10";
-$result = DB::instance('yanchupiao')->read($sql);
+$sql = "select * from table_name order by product_id desc limit 10";
+$result = DB::instance('db_name')->read($sql);
 $arrCSV = array();
 foreach ($result as $row) {
     $arrCSV[] = array(
-        $row['product_id'],
-        $row['product_name'],
-        $row['third_from'],
+        $row['row_1'],
+        $row['row_2'],
+        $row['row_3'],
     );
 }
 $fp = fopen("./file.csv", 'w');
