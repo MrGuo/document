@@ -13,7 +13,7 @@ if sys.argv[1:]:
     port = int(sys.argv[1])
 else:
     port = 8090
-server_address = ('10.94.44.42', port)
+server_address = ('xx.xx.xx.xx', port)
 
 HandlerClass.protocol_version = Protocol
 httpd = ServerClass(server_address, HandlerClass)
