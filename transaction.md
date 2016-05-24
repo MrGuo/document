@@ -47,3 +47,31 @@ I should never get here
 
 
 如果sleep后面还有sql执行，那会得到Expected result。后面没有sql的话不会抛出错误。
+
+<?php
+$mysqli = mysqli_init();
+
+$host = "127.0.0.1";
+$userName = 'root';
+$passwd = '123456';
+$dbName = 'test';
+
+$mysqli->real_connect($host, $userName, $passwd, $dbName);
+try {
+    $mysqli->query("START TRANSACTION");
+
+    $r1 = $mysqli->query("insert into t_test_1(name) VALUES ('a_5'), ('a_6')");
+    $r2 = $mysqli->query("insert into t_test_1(name) VALUES ('a_7'), ('a_8')");
+    sleep(7);
+
+    $r = $mysqli->commit();
+
+    echo "\nr1={$r1} r2={$r2} r={$r}\n";
+} catch (Exception $e) {
+    var_dump($e);
+    die("\nexception\n");
+}
+
+echo "\nfinal\n";
+
+mysqli不存在这种情况，虽然没有抛出Exception，但是commit = false
