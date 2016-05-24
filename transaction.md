@@ -45,3 +45,5 @@ Array
 I should never get here
 [... Script execution proceeds]
 
+
+如果sleep后面还有sql执行，那会得到Expected result。后面没有sql的话不会抛出错误。
