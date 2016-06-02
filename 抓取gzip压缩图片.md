@@ -52,3 +52,15 @@ def get_image(url,image_path):
 （写法比较奇葩……）
 
 ```
+
+
+至于为啥还要压缩，有这样一个观点：
+
+Content-Encoding（内容编码）。Content-Encoding 通常用于对实体内容进行压缩编码，目的是优化传输
+内容编码通常是选择性的，例如 jpg / png 这类文件一般不开启，因为图片格式已经是高度压缩过的，再压一遍没什么效果不说还浪费 CPU。
+
+推荐一个博客
+
+https://imququ.com/
+
+
