@@ -63,4 +63,14 @@ Content-Encoding（内容编码）。Content-Encoding 通常用于对实体内�
 
 https://imququ.com/
 
+如果使用php处理，可以使用Imagick插件
+
+$content = self::curl_get($imageUrl);
+$res = file_put_contents($tmpPath, $content);
+// tmpPath格式是压缩的，不可使用
+
+$imagickObj = new Imagick($tmpPath);
+$writeRes = $imagickObj->writeImage($path);
+
+// path这个路径的图片是解压的，可以使用
 
