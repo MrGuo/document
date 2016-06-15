@@ -47,3 +47,7 @@ foreach ($arrCSV as $fields) {
 }
 fclose($fp);
 </code></pre>
+
+#csv整型在excel展示时丢失精度#
+
+csv超过15位的整数在excel展示时会有丢精度，需要在字段前面加上'='或在后面加'\t'来解决
