@@ -6,6 +6,10 @@ du -sh library
 du -h file_name
 du -h file_name_1 file_name_2
 du -ch file_name_1 file_name_2
+显示目录下文件所占空间
+du -s *
+显示前十个占用空间最大的文件或目录
+du -s * | sort -nr | head
 
 
 -s 仅显示总计，只列出最后加总的值
