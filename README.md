@@ -12,6 +12,11 @@ ha
 
 哈哈
 
+
+
+
+
+kad
 thinkpad new 08-54
 
 thinkpad new 20-50
