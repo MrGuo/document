@@ -17,3 +17,4 @@ ha
 
 
 kad
+thinkpad new 08-54
