@@ -9,21 +9,17 @@ import os
 
 env.hosts = ['ip:port']
 env.user = 'root'
-env.password = ''
+env.password = 'pass'
 env.env = 'prod'
 
-env.project_dev_source = '/Users/guochao/releases/retailerp/' # 开发机项目主目录
 env.project_tar_source = '/Users/guochao/releases/' # 开发机项目压缩包存储目录
 env.project_pack_name  = 'retailerp' # 压缩包名前缀，文件名为release.tar.gz
 
 gitlab_url = 'http://git.hillinsight.com/hillinsight-rd/retailerp/repository/archive.tar.gz?ref=dev_start&private_token=pcbCx62vyFz447bKPYRz'
 
-
 env.project_front_root = 'server/frontend/web/'
 env.project_back_root = 'server/backend/web/'
 env.project_script_root = 'server/console/script/'
-env.project_back_client_root = 'client/ent/js/util/'
-
 
 env.deploy_project_root = '/home/work/retailerp/' # 生产环境项目主目录
 env.deploy_release_dir  = 'releases' # 项目发布目录,位于主目录下
@@ -52,12 +48,12 @@ def put_package(): # 上传任务函数
         with cd(env.deploy_project_root + env.deploy_release_dir):
             run("rm -rf %s" % (env.deploy_version_tmp))
             run("mkdir %s" % (env.deploy_version_tmp))
-    env.deploy_full_path = env.deploy_project_root + env.deploy_release_dir + "/" + env.deploy_version_tmp
+    deploy_full_path = env.deploy_project_root + env.deploy_release_dir + "/" + env.deploy_version_tmp
     with settings(warn_only=True):
-        result = put(env.project_tar_source + env.project_pack_name + ".tar.gz", env.deploy_full_path)
+        result = put(env.project_tar_source + env.project_pack_name + ".tar.gz", deploy_full_path)
     if result.failed and not ("put file failed, Continue[Y/N]?"):
         abort("Aborting file put task")
-    with cd(env.deploy_full_path):
+    with cd(deploy_full_path):
         run("tar -zxvf %s.tar.gz" % (env.project_pack_name))
         run("rm -rf %s.tar.gz" % (env.project_pack_name))
         run("mv `ls | egrep 'retailerp-dev_start.'`/* ./ ; rm -rf `ls | egrep 'retailerp-dev_start.'`")
@@ -66,17 +62,18 @@ def put_package(): # 上传任务函数
 @task
 def make_symlink(): #为当前目录做软链
     print yellow("update current symlink")
-    env.deploy_full_path_tmp = env.deploy_project_root + env.deploy_release_dir + "/" + env.deploy_version_tmp
-    env.deploy_full_path = env.deploy_project_root + env.deploy_release_dir + "/" + env.deploy_version
+    deploy_full_path_tmp = env.deploy_project_root + env.deploy_release_dir + "/" + env.deploy_version_tmp
+    deploy_full_path = env.deploy_project_root + env.deploy_release_dir + "/" + env.deploy_version
     with settings(warn_only = True):
-        run("mv %s %s" % (env.deploy_full_path_tmp, env.deploy_full_path))
+        run("rm -rf %s" % deploy_full_path)
+        run("mv %s %s" % (deploy_full_path_tmp, deploy_full_path))
 
-        fontroot = env.deploy_full_path + '/' + env.project_front_root + 'index_' + env.env + '.php'
-        fontroot_index = env.deploy_full_path + '/' + env.project_front_root + 'index.php'
-        backroot = env.deploy_full_path + '/'+ env.project_back_root + 'index_' + env.env + '.php'
-        backroot_index = env.deploy_full_path + '/' + env.project_back_root + 'index.php'
-        scriptroot = env.deploy_full_path + '/'+ env.project_script_root + 'script_' + env.env + '.php'
-        scriptroot_index = env.deploy_full_path + '/' + env.project_script_root + 'script.php'
+        fontroot = deploy_full_path + '/' + env.project_front_root + 'index_' + env.env + '.php'
+        fontroot_index = deploy_full_path + '/' + env.project_front_root + 'index.php'
+        backroot = deploy_full_path + '/'+ env.project_back_root + 'index_' + env.env + '.php'
+        backroot_index = deploy_full_path + '/' + env.project_back_root + 'index.php'
+        scriptroot = deploy_full_path + '/'+ env.project_script_root + 'script_' + env.env + '.php'
+        scriptroot_index = deploy_full_path + '/' + env.project_script_root + 'script.php'
 
         run ("rm %s" % fontroot_index)
         run ("rm %s" % backroot_index)
@@ -86,7 +83,8 @@ def make_symlink(): #为当前目录做软链
         run ("ln -s %s %s" % (scriptroot, scriptroot_index)) # index 软链
 
         # current
-        run("ln -s %s %s" % (env.deploy_full_path, env.deploy_project_root + env.deploy_current_dir))
+        run("rm %s" % (env.deploy_project_root + env.deploy_current_dir))
+        run("ln -s %s %s" % (deploy_full_path, env.deploy_project_root + env.deploy_current_dir))
 
     print green("make symlink success!")
 
