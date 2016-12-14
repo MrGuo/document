@@ -68,9 +68,11 @@ class Mall {
         $handle = @fopen($errorFile, 'r');
         if ($handle) {
             while(($buffer = fgets($handle, 4096)) !== false) {
-                // 必须大于日志的时间
-                //
                 $line = explode('|', trim($buffer));
+                // 必须大于日志的时间
+                if (strtotime($this->time) > $line[2]) {
+                    continue;
+                }
                 $this->errorArr[] = $line;
                 if (count($this->errorArr) >= 500) {
                     break;
