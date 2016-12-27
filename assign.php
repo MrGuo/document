@@ -50,8 +50,9 @@ class assign {
 
         // 是否再次按比例拆分
         $need = false;
+        $reduction = $this->reduction;
         foreach ($this->sku as $key => $value) {
-            $assign = (int) ($this->reduction * $value['rate']);
+            $assign = (int) ($reduction * $value['rate']);
             $this->sku[$key]['assign'] += $assign;
             $this->reduction -= $assign;
             if ($assign != 0) {
@@ -142,3 +143,36 @@ class assign {
         echo "\n----------------------\n";
     }
 }
+
+
+$param = array();
+// n 次测试
+for ($i=0; $i<100000; $i++) {
+    $r = rand(1, 10);
+    // 数组r条记录
+    $arr = array();
+    for ($j=0; $j<$r; $j++) {
+        $arr[] = array('id' => $j, 'price' => rand(1, 100));
+    }
+    $prices = array_column($arr, 'price');
+    $reduction = min($prices) - 10;
+    if ($reduction <= 0) {
+        $reduction = 1;
+    }
+    $assign = new assign($arr, $reduction);
+    $ret = $assign->run();
+    var_dump($reduction);
+    var_dump($ret);
+    $sum = 0;
+    foreach ($ret as $info) {
+        $sum  += $info['assign'];
+    }
+    if ($sum == $reduction) {
+        echo "Success\n";
+    }
+    else {
+        echo "Failure\n";
+        die;
+    }
+}
+
